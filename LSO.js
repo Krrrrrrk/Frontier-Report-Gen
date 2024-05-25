@@ -57,7 +57,9 @@ function clearFields() {
   // Clear specific cells
   sheet.getRange('C4').clearContent();
   sheet.getRange('C6').clearContent();
-  sheet.getRange('C10:C29').clearContent();
+  sheet.getRange('C10:C22').clearContent();
+  sheet.getRange('C24').clearContent();
+  sheet.getRange('C27:28').clearContent();
   sheet.getRange('C28').clearContent();
   sheet.getRange('H10').clearContent();
   
