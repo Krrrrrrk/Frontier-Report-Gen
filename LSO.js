@@ -117,21 +117,21 @@ function generateReport() {
 
     var incidentReport = "";
   if (c17Value) {
-    incidentReport = `Deputies above arrived at ${location}. ${numCrims} criminals had ${numHostages} hostages. ${deputy1} negotiated for ${countdown} seconds, and the criminals agreed to head ${direction}.
+    incidentReport = `Deputies above arrived at "${location}". ${numCrims} criminals had ${numHostages} hostages. "${deputy1}" negotiated for ${countdown} seconds, and the criminals agreed to head "${direction}".
 
-Chase Report: 
+CHASE REPORT:\n 
 ${chaseDescription}`;
   }
 
   var pcodeG105 = pcodeSheet.getRange('G105').getValue();
   var lemoyneDrugDirectionAct = pcodeG105 ? "\n$20 for The Lemoyne Drug-Direction Act" : "";
 
-  var report = `---INCIDENT REPORT---
+  var report = "```autohotkey\n" + `---INCIDENT REPORT---
 PLACE OF INCIDENT: ${location}
 
 DATE: ${dateN}
 
-TIME: ${timeR}
+TIME:: ${timeR}
 
 DEPUTY REPORTING: ${deputyR}
 
@@ -150,18 +150,17 @@ INCIDENT REPORT:
 
 ${incidentReport}
 
-Additional notes:
+ADDITIONAL NOTES:
 
-${charges ? 'Charged with: ' : ''}
+${charges ? 'CHARGES: ' : ''}
 
 ${charges ?  charges : ''}
 
 ${charges ?  timeFine : ''}
 
-${items ? 'Items Logged:\n' + items : ''}
-${lemoyneDrugDirectionAct}
+${items ? 'EVIDENCE LOGGED:\n' + items : ''} ${lemoyneDrugDirectionAct}
 
-SIGNED: ${dRank} ${deputyR}`;
+SIGNED: ${dRank} ${deputyR}` + "\n```";
 
   report = report.replace(/\n{2,}/g, '\n\n'); // Replace multiple newlines with two newlines
 
