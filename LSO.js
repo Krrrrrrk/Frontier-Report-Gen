@@ -73,7 +73,7 @@ function clearFields() {
   }
 
   // Clear range in pcode sheet
-  pcodeSheet.getRange('G5:G101').clearContent();
+  pcodeSheet.getRange('G5:G108').clearContent();
 
   // Recheck the state of checkboxes and hide/show rows accordingly
   checkCheckboxes();
