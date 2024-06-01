@@ -85,10 +85,11 @@ function clearFields() {
 
 function generateReport() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  
+   var pcodeSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('pcode');
+   
   var location = sheet.getRange('C4').getValue();
-  var date = sheet.getRange('C5').getValue();
-  var formattedDate = Utilities.formatDate(new Date(date), "GMT", "MM/dd/yyyy"); // Change "GMT" to your desired time zone if needed
+  var dateN = sheet.getRange('C5').getValue();
+  // var formattedDate = Utilities.formatDate(new Date(date), "GMT", "MM/dd/yyyy"); // Change "GMT" to your desired time zone if needed
   var timeR = sheet.getRange('C6').getValue();
   var deputyR = sheet.getRange('C7').getValue();
   var dRank = sheet.getRange('C8').getValue();
@@ -122,10 +123,13 @@ Chase Report:
 ${chaseDescription}`;
   }
 
+  var pcodeG105 = pcodeSheet.getRange('G105').getValue();
+  var lemoyneDrugDirectionAct = pcodeG105 ? "\n$20 for The Lemoyne Drug-Direction Act" : "";
+
   var report = `---INCIDENT REPORT---
 PLACE OF INCIDENT: ${location}
 
-DATE: ${formattedDate}
+DATE: ${dateN}
 
 TIME: ${timeR}
 
@@ -154,7 +158,8 @@ ${charges ?  charges : ''}
 
 ${charges ?  timeFine : ''}
 
-${items ? 'Items Logged: ' + items : ''}
+${items ? 'Items Logged:\n' + items : ''}
+${lemoyneDrugDirectionAct}
 
 SIGNED: ${dRank} ${deputyR}`;
 
