@@ -12,8 +12,8 @@ function onEdit(e) {
   var sheet = e.source.getActiveSheet();
   var range = e.range;
   
-  // Check if the edited cell is C17, C24, or C27
-  if (range.getA1Notation() === 'C17' || range.getA1Notation() === 'C24' || range.getA1Notation() === 'C27') {
+  // Check if the edited cell is C17, C24, C27, or C29
+  if (range.getA1Notation() === 'C17' || range.getA1Notation() === 'C24' || range.getA1Notation() === 'C27' || range.getA1Notation() === 'C29') {
     checkCheckboxes();
   }
 }
@@ -33,18 +33,28 @@ function checkCheckboxes() {
   var c24Value = sheet.getRange('C24').getValue();
   if (!c24Value) {
     sheet.hideRows(25, 2);  // Hide rows 25:26
-    sheet.hideRows(23, 1);  // Hide rows 25:26
+    sheet.hideRows(23, 1);  // Hide rows 23
+    sheet.hideRows(29, 1);  // Hide rows 29
   } else {
     sheet.showRows(25, 2);  // Show rows 25:26
-    sheet.showRows(23, 1);  // Hide rows 25:26
+    sheet.showRows(23, 1);  // Hide rows 23
+    sheet.showRows(29, 1);  // Show rows 29
   }
 
   // Check the value of C27
   var c27Value = sheet.getRange('C27').getValue();
   if (!c27Value) {
-    sheet.hideRows(28, 2);  // Hide rows 28:29
+    sheet.hideRows(28, 1);  // Hide rows 28
   } else {
-    sheet.showRows(28, 2);  // Show rows 28:29
+    sheet.showRows(28, 1);  // Show rows 28
+  }
+
+    // Check the value of C29
+  var c27Value = sheet.getRange('C29').getValue();
+  if (!c27Value) {
+    sheet.hideRows(30, 1);  // Hide rows 30
+  } else {
+    sheet.showRows(30, 1);  // Show rows 30
   }
 }
 
@@ -62,9 +72,10 @@ function clearFields() {
   sheet.getRange('C27:28').clearContent();
   sheet.getRange('C28').clearContent();
   sheet.getRange('H10').clearContent();
+  sheet.getRange('S10').clearContent();
   
   // Uncheck checkboxes if checked
-  var checkboxCells = ['C24', 'C27'];
+  var checkboxCells = ['C24', 'C27', 'C29'];
   for (var i = 0; i < checkboxCells.length; i++) {
     var cell = sheet.getRange(checkboxCells[i]);
     if (cell.getValue() === true) {
@@ -72,6 +83,9 @@ function clearFields() {
     }
   }
 
+  // Clear the content of C30
+  sheet.getRange('C30').clearContent();
+  
   // Clear range in pcode sheet
   pcodeSheet.getRange('G5:G108').clearContent();
 
@@ -110,8 +124,13 @@ function generateReport() {
   var chargesChecked = sheet.getRange('C24').getValue();
   var itemsChecked = sheet.getRange('C27').getValue();
   var charges = chargesChecked ? sheet.getRange('C25').getValue() : '';
+  var acharges = chargesChecked ? sheet.getRange('pcode!M106').getValue() : '';
   var items = itemsChecked ? sheet.getRange('C28').getValue() : '';
   var timeFine = sheet.getRange('C26').getValue();
+  
+  // Check if lawyer was requested
+  var lawyerRequested = sheet.getRange('C29').getValue();
+  var lawyerInfo = lawyerRequested ? sheet.getRange('C30').getValue() : '';
 
   var deputy1Text = c17Value ? `${deputy1} - Negotiator` : deputy1;
 
@@ -160,9 +179,16 @@ ${charges ?  timeFine : ''}
 
 ${items ? 'EVIDENCE LOGGED:\n' + items : ''} ${lemoyneDrugDirectionAct}
 
+${lawyerRequested ? 'Lawyer Requested: ' + lawyerInfo : ''}
+
 SIGNED: ${dRank} ${deputyR}` + "\n```";
 
   report = report.replace(/\n{2,}/g, '\n\n'); // Replace multiple newlines with two newlines
 
   sheet.getRange('H10').setValue(report);
+
+   // Generate Arrest Report
+  var arrestReport = `LSO - ${deputyR} - Sisika/Local X days - $X ⸻ LAW INVOLVED: ${deputy1Text}, ${deputy2}, ${deputy3}, ${deputy4}, ${deputy5}, ${deputy6}, ${deputy7} ⸻ CHARGES: ${acharges} ⸻ LAWYER REQUESTED: ${lawyerRequested ? lawyerInfo : ''} ⸻ ${items ? 'EVIDENCE LOGGED:' + items : ''} ${lemoyneDrugDirectionAct} ⸻⸻ REPORT:`;
+
+    sheet.getRange('S10').setValue(arrestReport);
 }
